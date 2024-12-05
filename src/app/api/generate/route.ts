@@ -4,7 +4,7 @@ import { LogoFormData } from "@/types/logo";
 const HUGGING_FACE_API_URL = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0";
 
 function generatePrompt(formData: LogoFormData): string {
-  const { style, type, structure, texte } = formData;
+  const { style, type, structure, texte, couleur } = formData;
   
   let prompt = `Generate a professional ${style} logo`;
   
@@ -15,6 +15,9 @@ function generatePrompt(formData: LogoFormData): string {
   if (type === "icone-texte" || type === "icone-seule") {
     prompt += ` in a ${structure} composition`;
   }
+
+  // Ajouter la couleur principale
+  prompt += `, primarily using the color ${couleur}`;
   
   // Ajout de détails spécifiques selon le style
   switch (style) {

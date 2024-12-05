@@ -6,6 +6,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { LogoFormData } from "@/types/logo";
 
 const logoStyles = [
   { value: "minimaliste", label: "Minimaliste" },
@@ -24,8 +25,8 @@ const structures = [
   { value: "libre", label: "Libre" },
 ];
 
-export function LogoForm({ onSubmit }: { onSubmit: (data: any) => void }) {
-  const [formData, setFormData] = useState({
+export function LogoForm({ onSubmit }: { onSubmit: (data: LogoFormData) => void }) {
+  const [formData, setFormData] = useState<LogoFormData>({
     style: "moderne",
     couleur: "#000000",
     type: "icone-texte",
@@ -45,7 +46,7 @@ export function LogoForm({ onSubmit }: { onSubmit: (data: any) => void }) {
           <Label className="text-black font-normal">Style du logo</Label>
           <Select
             value={formData.style}
-            onValueChange={(value) => setFormData({ ...formData, style: value })}
+            onValueChange={(value: LogoFormData['style']) => setFormData({ ...formData, style: value })}
           >
             <SelectTrigger className="bg-white border-gray-200 text-black">
               <SelectValue placeholder="Sélectionnez un style" />
@@ -82,16 +83,16 @@ export function LogoForm({ onSubmit }: { onSubmit: (data: any) => void }) {
           <Label className="text-black font-normal">Type de logo</Label>
           <RadioGroup
             value={formData.type}
-            onValueChange={(value) => setFormData({ ...formData, type: value })}
+            onValueChange={(value: LogoFormData['type']) => setFormData({ ...formData, type: value })}
             className="flex gap-4"
           >
             <div className="flex items-center space-x-2">
-              <RadioGroupItem value="icone" id="icone" />
-              <Label htmlFor="icone" className="text-black font-normal">Icône seule</Label>
+              <RadioGroupItem value="icone-seule" id="icone-seule" />
+              <Label htmlFor="icone-seule" className="text-black font-normal">Icône seule</Label>
             </div>
             <div className="flex items-center space-x-2">
-              <RadioGroupItem value="texte" id="texte" />
-              <Label htmlFor="texte" className="text-black font-normal">Texte seul</Label>
+              <RadioGroupItem value="texte-seul" id="texte-seul" />
+              <Label htmlFor="texte-seul" className="text-black font-normal">Texte seul</Label>
             </div>
             <div className="flex items-center space-x-2">
               <RadioGroupItem value="icone-texte" id="icone-texte" />
@@ -104,7 +105,7 @@ export function LogoForm({ onSubmit }: { onSubmit: (data: any) => void }) {
           <Label className="text-black font-normal">Structure</Label>
           <Select
             value={formData.structure}
-            onValueChange={(value) => setFormData({ ...formData, structure: value })}
+            onValueChange={(value: LogoFormData['structure']) => setFormData({ ...formData, structure: value })}
           >
             <SelectTrigger className="bg-white border-gray-200 text-black">
               <SelectValue placeholder="Sélectionnez une structure" />
