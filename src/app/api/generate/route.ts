@@ -3,6 +3,9 @@ import { LogoFormData } from "@/types/logo";
 
 const HUGGING_FACE_API_URL = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0";
 
+export const runtime = 'edge';
+export const maxDuration = 60;
+
 function generatePrompt(formData: LogoFormData): string {
   const { style, type, structure, texte, couleur } = formData;
   const timestamp = Date.now(); // Pour rendre chaque prompt unique
@@ -86,25 +89,29 @@ export async function POST(req: Request) {
         inputs: prompt,
         parameters: {
           negative_prompt: "text, watermark, signature, blurry, low quality",
-          num_inference_steps: 30,
+          num_inference_steps: 25, // Réduit de 30 à 25 pour plus de rapidité
           guidance_scale: 7.5,
         }
       }),
     });
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      const error = await response.text();
+      return new NextResponse(
+        JSON.stringify({ error: `Hugging Face API error: ${error}` }),
+        { status: response.status }
+      );
     }
 
-    const buffer = await response.arrayBuffer();
-    const base64Image = Buffer.from(buffer).toString("base64");
-    const imageUrl = `data:image/jpeg;base64,${base64Image}`;
+    const result = await response.arrayBuffer();
+    const base64 = Buffer.from(result).toString('base64');
+    const imageUrl = `data:image/jpeg;base64,${base64}`;
 
-    return NextResponse.json({ imageUrl });
+    return new NextResponse(JSON.stringify({ imageUrl }));
   } catch (error) {
     console.error("Error generating logo:", error);
-    return NextResponse.json(
-      { error: "Failed to generate logo" },
+    return new NextResponse(
+      JSON.stringify({ error: "Internal server error during logo generation" }),
       { status: 500 }
     );
   }
