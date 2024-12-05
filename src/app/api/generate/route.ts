@@ -1,17 +1,18 @@
 import { NextResponse } from "next/server";
+import { LogoFormData } from "@/types/logo";
 
 const HUGGING_FACE_API_URL = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0";
 
-function generatePrompt(formData: any): string {
+function generatePrompt(formData: LogoFormData): string {
   const { style, type, structure, texte } = formData;
   
   let prompt = `Generate a professional ${style} logo`;
   
-  if (type === "icone-texte" || type === "texte") {
+  if (type === "icone-texte" || type === "texte-seul") {
     prompt += ` with the text "${texte}"`;
   }
   
-  if (type === "icone-texte" || type === "icone") {
+  if (type === "icone-texte" || type === "icone-seule") {
     prompt += ` in a ${structure} composition`;
   }
   
@@ -45,7 +46,7 @@ function generatePrompt(formData: any): string {
 
 export async function POST(req: Request) {
   try {
-    const formData = await req.json();
+    const formData: LogoFormData = await req.json();
     const prompt = generatePrompt(formData);
 
     const response = await fetch(HUGGING_FACE_API_URL, {
