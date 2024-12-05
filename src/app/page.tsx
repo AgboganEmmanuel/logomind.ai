@@ -75,7 +75,7 @@ export default function Home() {
           </div>
           <div className="bg-white border-2 border-dashed border-gray-200 rounded-lg flex items-center justify-center min-h-[600px] relative">
             {isLoading ? (
-              <div className="text-gray-500">Génération en cours... (cela peut prendre jusqu'à 30 secondes)</div>
+              <div className="text-gray-500">Génération en cours... (cela peut prendre jusqu&apos;à 30 secondes)</div>
             ) : error ? (
               <div className="text-red-500 p-4 text-center">
                 <p>{error}</p>
