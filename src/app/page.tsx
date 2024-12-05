@@ -10,7 +10,7 @@ import { LogoFormData } from "@/types/logo";
 export default function Home() {
   const [generatedLogo, setGeneratedLogo] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-
+//test comment
   const generateLogo = async (formData: LogoFormData) => {
     setIsLoading(true);
     try {
