@@ -4,12 +4,14 @@ import { useState } from "react";
 import { LogoForm } from "../components/logo-form";
 import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
+import Image from "next/image";
+import { LogoFormData } from "@/types/logo";
 
 export default function Home() {
   const [generatedLogo, setGeneratedLogo] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const generateLogo = async (formData: any) => {
+  const generateLogo = async (formData: LogoFormData) => {
     setIsLoading(true);
     try {
       const response = await fetch("/api/generate", {
@@ -65,7 +67,15 @@ export default function Home() {
               <div className="text-gray-500">Génération en cours...</div>
             ) : generatedLogo ? (
               <>
-                <img src={generatedLogo} alt="Logo généré" className="max-w-full h-auto" />
+                <div className="relative w-full h-[600px]">
+                  <Image
+                    src={generatedLogo}
+                    alt="Logo généré"
+                    fill
+                    className="object-contain"
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                  />
+                </div>
                 <Button
                   onClick={handleDownload}
                   size="icon"
