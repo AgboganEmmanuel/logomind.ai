@@ -5,46 +5,70 @@ const HUGGING_FACE_API_URL = "https://api-inference.huggingface.co/models/stabil
 
 function generatePrompt(formData: LogoFormData): string {
   const { style, type, structure, texte, couleur } = formData;
+  const timestamp = Date.now(); // Pour rendre chaque prompt unique
   
-  let prompt = `Generate a professional ${style} logo`;
+  let prompt = `Create a highly distinctive and professional ${style} logo design`;
   
-  if (type === "icone-texte" || type === "texte-seul") {
-    prompt += ` with the text "${texte}"`;
+  // Renforcement du type de logo
+  if (type === "icone-texte") {
+    prompt += `, featuring both a striking icon and the text "${texte}" harmoniously integrated`;
+  } else if (type === "texte-seul") {
+    prompt += `, with the text "${texte}" as the main focal point, no icons or symbols`;
+  } else if (type === "icone-seule") {
+    prompt += `, consisting of only an iconic symbol without any text`;
   }
   
+  // Renforcement de la structure
   if (type === "icone-texte" || type === "icone-seule") {
-    prompt += ` in a ${structure} composition`;
+    prompt += `. The design must strictly follow a ${structure} layout`;
+    switch (structure) {
+      case "symetrique":
+        prompt += `, with perfect balance and mirror-like symmetry`;
+        break;
+      case "circulaire":
+        prompt += `, arranged in a perfect circular composition`;
+        break;
+      case "rectangulaire":
+        prompt += `, contained within a rectangular boundary`;
+        break;
+      case "libre":
+        prompt += `, with dynamic and organic arrangement`;
+        break;
+    }
   }
 
-  // Ajouter la couleur principale
-  prompt += `, primarily using the color ${couleur}`;
+  // Renforcement de la couleur
+  prompt += `. The dominant and most prominent color must be ${couleur}, make it very visible`;
   
-  // Ajout de détails spécifiques selon le style
+  // Renforcement des styles spécifiques
   switch (style) {
     case "minimaliste":
-      prompt += ", clean and simple design, minimal details";
+      prompt += `. Ultra-clean and simplified design, using minimal elements, essential shapes only, refined to absolute necessity`;
       break;
     case "moderne":
-      prompt += ", contemporary design, sleek and professional";
+      prompt += `. Contemporary and sophisticated design with sleek lines, modern aesthetics, cutting-edge appearance`;
       break;
     case "vintage":
-      prompt += ", retro style, classic elements, aged look";
+      prompt += `. Strong retro aesthetics, classic vintage elements, authentic aged appearance, nostalgic feel`;
       break;
     case "dessin-anime":
-      prompt += ", cartoon style, playful and fun design";
+      prompt += `. Playful cartoon style, fun and expressive design, animated character-like elements`;
       break;
     case "futuriste":
-      prompt += ", futuristic elements, high-tech appearance";
+      prompt += `. Ultra-modern futuristic elements, sci-fi inspired, high-tech and innovative appearance`;
       break;
     case "typographique":
-      prompt += ", typography focused, creative lettering";
+      prompt += `. Focus on creative and artistic typography, unique letterforms, expressive font design`;
       break;
     case "3d":
-      prompt += ", three-dimensional design, depth and shadows";
+      prompt += `. Fully three-dimensional design with realistic depth, shadows, and perspective`;
       break;
   }
 
-  return prompt + ", high quality, professional logo design, white background";
+  // Ajout d'éléments de qualité et de randomisation
+  prompt += `, masterfully crafted with attention to detail, professional quality, perfect for business use. White background, high resolution. Seed: ${timestamp}`;
+  
+  return prompt;
 }
 
 export async function POST(req: Request) {
