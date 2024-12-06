@@ -1,79 +1,89 @@
 import { NextResponse } from "next/server";
 import { LogoFormData } from "@/types/logo";
 
-const HUGGING_FACE_API_URL = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0";
+// const HUGGING_FACE_API_URL = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0";
+const HUGGING_FACE_API_URL= "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-3.5-large";
 
 export const runtime = 'edge';
 export const maxDuration = 60;
 
 function generatePrompt(formData: LogoFormData): string {
-  const { style, type, structure, texte, couleur } = formData;
-  const timestamp = Date.now(); // Pour rendre chaque prompt unique
-  
-  let prompt = `Create a highly distinctive and professional ${style} logo design`;
-  
-  // Renforcement du type de logo
-  if (type === "icone-texte") {
-    prompt += `, featuring both a striking icon and the text "${texte}" harmoniously integrated`;
-  } else if (type === "texte-seul") {
-    prompt += `, with the text "${texte}" as the main focal point, no icons or symbols`;
-  } else if (type === "icone-seule") {
-    prompt += `, consisting of only an iconic symbol without any text`;
-  }
-  
-  // Renforcement de la structure
-  if (type === "icone-texte" || type === "icone-seule") {
-    prompt += `. The design must strictly follow a ${structure} layout`;
-    switch (structure) {
-      case "symetrique":
-        prompt += `, with perfect balance and mirror-like symmetry`;
-        break;
-      case "circulaire":
-        prompt += `, arranged in a perfect circular composition`;
-        break;
-      case "rectangulaire":
-        prompt += `, contained within a rectangular boundary`;
-        break;
-      case "libre":
-        prompt += `, with dynamic and organic arrangement`;
-        break;
-    }
+  const { style, type, structure, texte, couleur, description } = formData;
+  const timestamp = Date.now();
+
+  // Base du prompt
+  let prompt = `Create a professional, visually striking logo design in ${style} style`;
+
+  // Add description if provided
+  if (description) {
+    prompt += `. The logo should represent: ${description}`;
   }
 
-  // Renforcement de la couleur
-  prompt += `. The dominant and most prominent color must be ${couleur}, make it very visible`;
-  
-  // Renforcement des styles spécifiques
+  // Type de logo
+  switch (type) {
+    case 'icone-seule':
+      prompt += `, consisting only of an iconic symbol without text`;
+      break;
+    case 'texte-seul':
+      prompt += `, where the text "${texte}" is the main focal point, without any icons`;
+      break;
+    case 'icone-texte':
+      prompt += `, integrating a unique icon with the text "${texte}" in harmony`;
+      break;
+  }
+
+  // Structure du logo
+  switch (structure) {
+    case 'symetrique':
+      prompt += `, following a symmetrical layout for perfect balance`;
+      break;
+    case 'circulaire':
+      prompt += `, designed in a circular composition for unity and elegance`;
+      break;
+    case 'rectangulaire':
+      prompt += `, confined within a rectangular frame for structure and clarity`;
+      break;
+    case 'libre':
+      prompt += `, with a freeform layout for creativity and organic flow`;
+      break;
+  }
+
+  // Couleur dominante
+  prompt += `. The dominant color must be ${couleur}, making it highly visible and prominent.`;
+
+  // Style de design
   switch (style) {
-    case "minimaliste":
-      prompt += `. Ultra-clean and simplified design, using minimal elements, essential shapes only, refined to absolute necessity`;
+    case 'moderne':
+      prompt += ` Sleek and contemporary with clean lines and innovative design.`;
       break;
-    case "moderne":
-      prompt += `. Contemporary and sophisticated design with sleek lines, modern aesthetics, cutting-edge appearance`;
+    case 'minimaliste':
+      prompt += ` Simplified, clean, and reduced to essential elements.`;
       break;
-    case "vintage":
-      prompt += `. Strong retro aesthetics, classic vintage elements, authentic aged appearance, nostalgic feel`;
+    case 'vintage':
+      prompt += ` Retro-inspired with nostalgic and classic details.`;
       break;
-    case "dessin-anime":
-      prompt += `. Playful cartoon style, fun and expressive design, animated character-like elements`;
+    case 'futuriste':
+      prompt += ` Sci-fi inspired with futuristic and high-tech aesthetics.`;
       break;
-    case "futuriste":
-      prompt += `. Ultra-modern futuristic elements, sci-fi inspired, high-tech and innovative appearance`;
+    case '3d':
+      prompt += ` Featuring a realistic 3D look with depth and perspective.`;
       break;
-    case "typographique":
-      prompt += `. Focus on creative and artistic typography, unique letterforms, expressive font design`;
+    case 'typographique':
+      prompt += ` Centered on typography with unique and expressive letterforms.`;
       break;
-    case "3d":
-      prompt += `. Fully three-dimensional design with realistic depth, shadows, and perspective`;
+    case 'dessin-anime':
+      prompt += ` Playful, cartoon-like, and character-driven design.`;
       break;
   }
 
-  // Ajout d'éléments de qualité et de randomisation
-  prompt += `, masterfully crafted with attention to detail, professional quality, perfect for business use. White background, high resolution. Seed: ${timestamp}`;
-  
+  // Détails supplémentaires pour la qualité et la spécificité
+  prompt += ` Ensure high resolution, exceptional detail, and a clean white background.`;
+
+  // Seed pour randomisation
+  prompt += ` [Seed: ${timestamp}]`;
+
   return prompt;
 }
-
 export async function POST(req: Request) {
   try {
     const formData: LogoFormData = await req.json();
@@ -89,7 +99,7 @@ export async function POST(req: Request) {
         inputs: prompt,
         parameters: {
           negative_prompt: "text, watermark, signature, blurry, low quality",
-          num_inference_steps: 25, // Réduit de 30 à 25 pour plus de rapidité
+          num_inference_steps: 30, // Réduit de 30 à 25 pour plus de rapidité
           guidance_scale: 7.5,
         }
       }),
