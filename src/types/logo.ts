@@ -4,4 +4,5 @@ export interface LogoFormData {
   type: 'icone-seule' | 'texte-seul' | 'icone-texte';
   structure: 'symetrique' | 'circulaire' | 'rectangulaire' | 'libre';
   texte: string;
+  description?: string; // Optional field for additional logo description
 }

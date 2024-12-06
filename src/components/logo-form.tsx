@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { LogoFormData } from "@/types/logo";
 
@@ -32,6 +33,7 @@ export function LogoForm({ onSubmit }: { onSubmit: (data: LogoFormData) => void 
     type: "icone-texte",
     structure: "symetrique",
     texte: "",
+    description: "",
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -127,6 +129,17 @@ export function LogoForm({ onSubmit }: { onSubmit: (data: LogoFormData) => void 
             value={formData.texte}
             onChange={(e) => setFormData({ ...formData, texte: e.target.value })}
             placeholder="Entrez le texte de votre logo"
+            className="bg-white border-gray-200 text-black placeholder:text-gray-500"
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label className="text-black font-normal">Description du logo</Label>
+          <Textarea
+            rows={4}
+            value={formData.description || ""}
+            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+            placeholder="Décrivez votre entreprise ou le concept du logo"
             className="bg-white border-gray-200 text-black placeholder:text-gray-500"
           />
         </div>
