@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { LogoFormData } from "@/types/logo";
 
-// const HUGGING_FACE_API_URL = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0";
+// test const HUGGING_FACE_API_URL = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0";
 const HUGGING_FACE_API_URL= "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-3.5-large";
 
 export const runtime = 'edge';
